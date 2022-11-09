@@ -2,6 +2,20 @@
     "name": "Arthur Prado",
     "job": "Front-end Developer",
     "github": "TioArthurPrado",
+    "perfis": {
+      "favoritos": [
+        {
+          "name": "Everton Melo",
+          "url": "https://github.com/Tonzera10",
+          "foto": "Tonzera10"
+        },
+        {
+          "name": "Arthur Prado",
+          "url": "https://github.com/Tonzera10",
+          "foto": "TioArthurPrado"
+        }
+      ]
+    },
     "playlists": {
       "jogos": [
           {

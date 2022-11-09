@@ -1,16 +1,14 @@
+import React from "react";
 import config from "../config.json";
 import styled from "styled-components";
 import { CSSReset } from "../src/components/CSSReset";
-import Menu from "../src/components/Menu";
+import Menu from "../src/components/Menu/Menu";
 import { StyledTimeline } from "../src/components/Timeline";
-import { getDisplayName } from "next/dist/shared/lib/utils";
+import bg from "../src/assets/background.png";
+import { FavoritosStyle } from "../src/components/FavoritosStyle";
 
 function HomePage() {
-  const estilosDaHomePage = {
-    // backgroundColor: "red"
-  };
-
-  console.log(config.playlists);
+  const [valorDoFiltro, setValorDoFiltro] = React.useState("");
 
   return (
     <>
@@ -22,19 +20,15 @@ function HomePage() {
           flex: 1,
         }}
       >
-        <Menu />
+        <Menu valorDoFiltro={valorDoFiltro} setValorDoFiltro={setValorDoFiltro} />
         <Header />
-        <TimeLine playlists={config.playlists} />
+        <TimeLine searchValue={valorDoFiltro} perfis={config.perfis} playlists={config.playlists} />
       </div>
     </>
   );
 }
 
 export default HomePage;
-
-// function Menu() {
-//   return <div>Menu</div>;
-// }
 
 const StyledHeader = styled.div`
   img {
@@ -43,52 +37,87 @@ const StyledHeader = styled.div`
     border-radius: 50%;
   }
   .user-info {
-    margin-top: 50px;
+    /* margin-top: 50px; */
     display: flex;
     align-items: center;
     width: 100%;
     padding: 16px 32px;
     gap: 16px;
   }
+  .banner {
+    background-image: url(${bg.src});
+    height: 28vh;
+    width: 100%;
+  }
 `;
 
 function Header() {
   return (
-    <StyledHeader>
-      <section className="user-info">
-        <img src={`https://github.com/${config.github}.png`}></img>
-        <div>
-          <h2>{config.name}</h2>
-          <p>{config.job}</p>
-        </div>
-      </section>
-    </StyledHeader>
+    <>
+      <StyledHeader>
+        <div className="banner"></div>
+        <section className="user-info">
+          <img src={`https://github.com/${config.github}.png`}></img>
+          <div>
+            <h2>{config.name}</h2>
+            <p>{config.job}</p>
+          </div>
+        </section>
+      </StyledHeader>
+    </>
   );
 }
 
-function TimeLine(props) {
-  // console.log("Dentro do componente", props.playlists);
+function TimeLine({searchValue, ...props}) {
   const playlistNames = Object.keys(props.playlists);
+  const favoritosNames = Object.keys(props.perfis);
   return (
-    <StyledTimeline>
-      {playlistNames.map((playlistNames) => {
-        const videos = props.playlists[playlistNames];
-        return (
-          <section>
-            <h2>{playlistNames}</h2>
-            <div>
-              {videos.map((video) => {
-                return (
-                  <a href={video.url}>
-                    <img src={video.thumb} />
-                    <span>{video.title}</span>
-                  </a>
-                );
-              })}
-            </div>
-          </section>
-        );
-      })}
-    </StyledTimeline>
+    <>
+      <StyledTimeline>
+        {playlistNames.map((playlistNames) => {
+          const videos = props.playlists[playlistNames];
+          return (
+            <section key={playlistNames}>
+              <h2>{playlistNames}</h2>
+              <div>
+                {videos.filter((video) => {
+                  const titleNormalized = video.title.toLowerCase(); 
+                  const searchValueNormalized = searchValue.toLowerCase(); 
+                  return titleNormalized.includes(searchValueNormalized)
+                }).map((video) => {
+                  return (
+                    <a key={video.url} href={video.url}>
+                      <img src={video.thumb} />
+                      <span>{video.title}</span>
+                    </a>
+                  );
+                })}
+              </div>
+            </section>
+          );
+        })}
+      </StyledTimeline>
+
+      <FavoritosStyle>
+        {favoritosNames.map((favoritosNames)=>{
+          const profile = props.perfis[favoritosNames];
+          return(
+            <section>
+              <h2>{favoritosNames}</h2>
+              <div className="profile">
+                {profile.map((profile) => {
+                  return (
+                    <a href={profile.url}>
+                      <img src={`https://github.com/${profile.foto}.png`} />
+                      <span>{profile.name}</span>
+                    </a>
+                  )
+                })}
+              </div>
+            </section>
+          )
+        })}
+      </FavoritosStyle>
+    </>
   );
 }
