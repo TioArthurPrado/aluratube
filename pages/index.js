@@ -1,7 +1,6 @@
 import React from "react";
 import config from "../config.json";
 import styled from "styled-components";
-import { CSSReset } from "../src/components/CSSReset";
 import Menu from "../src/components/Menu/Menu";
 import { StyledTimeline } from "../src/components/Timeline";
 import bg from "../src/assets/background.png";
@@ -12,7 +11,6 @@ function HomePage() {
 
   return (
     <>
-      <CSSReset />
       <div
         style={{
           display: "flex",
@@ -31,6 +29,8 @@ function HomePage() {
 export default HomePage;
 
 const StyledHeader = styled.div`
+background-color: ${({ theme }) => theme.backgroundLevel1};
+
   img {
     width: 80px;
     height: 80px;
@@ -77,7 +77,7 @@ function TimeLine({searchValue, ...props}) {
         {playlistNames.map((playlistNames) => {
           const videos = props.playlists[playlistNames];
           return (
-            <section key={playlistNames}>
+            <section>
               <h2>{playlistNames}</h2>
               <div>
                 {videos.filter((video) => {
@@ -86,7 +86,7 @@ function TimeLine({searchValue, ...props}) {
                   return titleNormalized.includes(searchValueNormalized)
                 }).map((video) => {
                   return (
-                    <a key={video.url} href={video.url}>
+                    <a href={video.url}>
                       <img src={video.thumb} />
                       <span>{video.title}</span>
                     </a>

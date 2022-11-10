@@ -40,7 +40,7 @@ export default function Search( {valorDoFiltro, setValorDoFiltro} ) {
     return(
   <StyledSearch>
     <input type="text" onChange={(event) => {setValorDaBusca(event.target.value)}} value={ValorDaBusca} />
-    <button>🔎</button>
+    <button>🔎</button> 
   </StyledSearch>
     )
 }
